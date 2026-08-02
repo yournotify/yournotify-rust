@@ -57,13 +57,13 @@ impl Client {
         unreachable!()
     }
     pub async fn validate_auth(&self) -> Result<Value, Error> { self.request(Method::GET, "auth/me", json!({})).await }
-    pub async fn identify(&self, data: Value) -> Result<Value, Error> { self.request(Method::POST, "automations/identify", data).await }
-    pub async fn track(&self, data: Value) -> Result<Value, Error> { self.request(Method::POST, "automations/events", normalize_event(data)).await }
+    pub async fn identify(&self, data: Value) -> Result<Value, Error> { self.request(Method::POST, "sdk/identify", data).await }
+    pub async fn track(&self, data: Value) -> Result<Value, Error> { self.request(Method::POST, "sdk/events", normalize_event(data)).await }
     pub async fn track_batch(&self, events: Vec<Value>, options: Value) -> Result<Value, Error> {
         let mut payload = options.as_object().cloned().unwrap_or_default(); payload.insert("events".into(), Value::Array(events.into_iter().map(normalize_event).collect()));
-        self.request(Method::POST, "automations/events/batch", Value::Object(payload)).await
+        self.request(Method::POST, "sdk/events/batch", Value::Object(payload)).await
     }
-    pub async fn alias(&self, data: Value) -> Result<Value, Error> { self.request(Method::POST, "automations/alias", data).await }
+    pub async fn alias(&self, data: Value) -> Result<Value, Error> { self.request(Method::POST, "sdk/alias", data).await }
     pub fn email(&self) -> Channel<'_> { Channel { client: self, channel: "email" } }
     pub fn sms(&self) -> Channel<'_> { Channel { client: self, channel: "sms" } }
     pub fn whatsapp(&self) -> Channel<'_> { Channel { client: self, channel: "whatsapp" } }
